@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spiders — Арахнофобия</title>
+  <style>
+    /* ─── Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ─── Fonts ─── */
+    @import url('https://fonts.googleapis.com/css2?family=Vipnagorgialla&display=swap');
+
+    @font-face {
+      font-family: 'Argentum Sans';
+      src: url('https://fonts.cdnfonts.com/css/argentum-sans') format('woff2');
+    }
+
+    /* Fallback если CDN недоступен */
+    :root {
+      --font-title: 'Vipnagorgialla', 'Georgia', serif;
+      --font-body: 'Argentum Sans', 'Helvetica Neue', Arial, sans-serif;
+      --bg: #f0f0f0;
+      --white: #ffffff;
+      --black: #000000;
+      --muted: rgba(0, 0, 0, 0.4);
+    }
+
+    /* ─── App Shell ─── */
+    body {
+      background: #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 24px 16px;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-family: var(--font-body);
+    }
+
+    /* ─── Screen ─── */
+    .screen {
+      width: 390px;
+      height: 844px;
+      background: var(--bg);
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      flex-shrink: 0;
+    }
+
+    /* ─────────────────────────────────────────
+       SCREEN 1 — Главная (прокручиваемая)
+    ───────────────────────────────────────── */
+    #screen1 {
+      overflow-y: auto;
+      height: 844px;
+    }
+
+    #screen1::-webkit-scrollbar { display: none; }
+
+    .s1-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--white);
+      width: 100%;
+      height: 129px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 25px 0 25px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .s1-logo {
+      font-family: var(--font-title);
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--black);
+    }
+
+    .burger {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .burger span {
+      display: block;
+      width: 21px;
+      height: 3px;
+      background: var(--black);
+      border-radius: 2px;
+    }
+
+    .s1-hero {
+      background: #ddd;
+      width: 390px;
+      height: 477px;
+      position: relative;
+      border-bottom-left-radius: 80px;
+      border-bottom-right-radius: 80px;
+      overflow: hidden;
+      box-shadow: 0 4px 8.7px rgba(0,0,0,0.07), inset 0 4px 11.6px rgba(0,0,0,0.25);
+    }
+
+    .s1-hero-spider {
+      position: absolute;
+      width: 298px;
+      height: 319px;
+      background: #e6e6e6;
+      border-radius: 50% 50% 60% 60% / 40% 40% 60% 60%;
+      top: 133px;
+      left: 46px;
+      box-shadow: 0 4px 4px rgba(0,0,0,0.13);
+    }
+
+    .s1-hero-subtitle {
+      position: absolute;
+      top: 219px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: var(--font-body);
+      font-size: 20px;
+      font-weight: 300;
+      color: var(--black);
+      padding: 0 17px;
+      line-height: 1.4;
+    }
+
+    .s1-hero-title {
+      position: absolute;
+      top: 169px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: var(--font-title);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .s1-content {
+      padding: 0;
+    }
+
+    .s1-section {
+      padding: 0 13px;
+      margin-top: 0;
+    }
+
+    /* Разделитель */
+    .s1-divider {
+      width: 126px;
+      height: 1px;
+      background: rgba(0,0,0,0.4);
+      margin: 0 9px;
+      filter: drop-shadow(0 4px 1px rgba(0,0,0,0.25));
+    }
+
+    .s1-section-title {
+      font-family: var(--font-title);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--black);
+      margin: 16px 0 8px;
+      padding-left: 4px;
+    }
+
+    .s1-section-text {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--black);
+      line-height: 1.5;
+      padding: 0 4px;
+    }
+
+    /* Кнопка "Подробнее →" */
+    .s1-more-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--muted);
+      margin: 10px 0 12px 4px;
+      padding: 0;
+      text-decoration: none;
+    }
+
+    .s1-more-btn::after {
+      content: '';
+      display: inline-block;
+      width: 19px;
+      height: 1px;
+      background: var(--muted);
+    }
+
+    /* Изображение паука (секция 3) */
+    .s1-spider-img {
+      width: 364px;
+      height: 198px;
+      border-radius: 110px;
+      overflow: hidden;
+      margin: 16px auto;
+      display: block;
+      background: #888 url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400') center/cover no-repeat;
+    }
+
+    /* Подвал */
+    .s1-footer {
+      background: var(--white);
+      padding: 32px 15px 60px;
+    }
+
+    .s1-footer-logo {
+      font-family: var(--font-title);
+      font-size: 32px;
+      font-weight: 400;
+      color: var(--black);
+      margin-bottom: 24px;
+    }
+
+    .s1-footer-heading {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--black);
+      margin-bottom: 10px;
+    }
+
+    .s1-footer-text {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--black);
+      line-height: 1.6;
+    }
+
+    /* ─── Decorative footer wave ─── */
+    .s1-footer-waves {
+      position: relative;
+      height: 100px;
+      margin-top: 20px;
+      pointer-events: none;
+    }
+
+    .s1-footer-waves .wave {
+      position: absolute;
+      bottom: 0;
+      left: -15px;
+      right: -15px;
+      height: 70px;
+      border-radius: 50%;
+    }
+
+    .wave-1 { background: #f0f0f0; bottom: 30px; }
+    .wave-2 { background: #d4d4d4; bottom: 10px; }
+    .wave-3 { background: #7e7e7e; bottom: -10px; }
+
+    /* ─────────────────────────────────────────
+       ЭКРАНЫ 2–4 — Подробные страницы
+    ───────────────────────────────────────── */
+    .detail-screen {
+      background: var(--bg);
+    }
+
+    .detail-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: absolute;
+      top: 71px;
+      left: 22px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      text-decoration: none;
+      z-index: 2;
+    }
+
+    .detail-back::before {
+      content: '';
+      display: inline-block;
+      width: 19px;
+      height: 1px;
+      background: var(--muted);
+      transform: scaleX(-1);
+    }
+
+    .detail-title {
+      position: absolute;
+      top: 133px;
+      left: 22px;
+      font-family: var(--font-title);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--black);
+      line-height: 1.2;
+    }
+
+    .detail-body {
+      position: absolute;
+      top: 211px;
+      left: 22px;
+      right: 12px;
+      bottom: 26px;
+      overflow-y: auto;
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: var(--black);
+      line-height: 1.55;
+    }
+
+    .detail-body::-webkit-scrollbar { display: none; }
+
+    .detail-body ol {
+      padding-left: 24px;
+    }
+
+    .detail-body li {
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .detail-body p {
+      font-weight: 300;
+      margin-top: 6px;
+    }
+
+    .detail-body .spacer { height: 12px; }
+
+    /* ─────────────────────────────────────────
+       ЭКРАН 5 — Меню (Contents)
+    ───────────────────────────────────────── */
+    #screen5 {
+      background: var(--bg);
+    }
+
+    .menu-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: absolute;
+      top: 71px;
+      left: 22px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      text-decoration: none;
+      z-index: 2;
+    }
+
+    .menu-back::before {
+      content: '';
+      display: inline-block;
+      width: 19px;
+      height: 1px;
+      background: var(--muted);
+      transform: scaleX(-1);
+    }
+
+    /* Меню-ссылки */
+    .menu-link {
+      display: block;
+      position: absolute;
+      font-family: var(--font-title);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--black);
+      left: 22px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      text-align: left;
+      text-decoration: none;
+      line-height: 1.2;
+    }
+
+    .menu-divider {
+      position: absolute;
+      left: 22px;
+      width: 126px;
+      height: 1px;
+      background: rgba(0,0,0,0.4);
+    }
+
+    /* Декоративный элемент паука */
+    .menu-deco {
+      position: absolute;
+      bottom: -60px;
+      left: -80px;
+      width: 548px;
+      height: 508px;
+      background: rgba(0,0,0,0.10);
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(2px);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 430px) {
+      body { padding: 0; gap: 0; }
+      .screen { border-radius: 0; width: 100vw; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       ЭКРАН 1 — Главная страница
+  ══════════════════════════════════════ -->
+  <div class="screen" id="screen1">
+
+    <!-- Шапка -->
+    <div class="s1-header">
+      <span class="s1-logo">Spiders</span>
+      <button class="burger" aria-label="Меню">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <!-- Герой-блок с изображением -->
+    <div class="s1-hero">
+      <div class="s1-hero-spider"></div>
+      <div class="s1-hero-title">Арахнофобия</div>
+      <div class="s1-hero-subtitle">И как же от нее избавиться?</div>
+    </div>
+
+    <div class="s1-content">
+
+      <!-- Блок 1: Что такое арахнофобия? -->
+      <div class="s1-section" style="margin-top:20px;">
+        <div class="s1-section-title">Что такое<br>арахнофобия?</div>
+        <p class="s1-section-text">
+          <strong style="font-weight:500;">Арахнофобия-</strong>
+          распространенный и часто необоснованный страх пауков.<br><br>
+          Даже картинки и видео с паукообразными могут вызывать панический страх у людей.
+        </p>
+        <div class="s1-divider" style="margin-top:12px;"></div>
+      </div>
+
+      <!-- Блок 2: Проявления -->
+      <div class="s1-section" style="margin-top:16px;">
+        <div class="s1-section-title">Проявления</div>
+        <p class="s1-section-text">
+          Существует ряд проявлений данной фобии. Это как и физические реакции, так и эмоциональные.
+        </p>
+        <a class="s1-more-btn" href="#screen2-anchor">Подробнее </a>
+        <div class="s1-divider"></div>
+      </div>
+
+      <!-- Блок 3: Причины появления + изображение паука -->
+      <div class="s1-section" style="margin-top:16px;">
+        <div class="s1-section-title">Причины появления</div>
+        <p class="s1-section-text">
+          Причины появления различны. Негативный личный опыт, влияние окружения. Все это могло появлиять.
+        </p>
+        <a class="s1-more-btn" href="#screen3-anchor">Подробнее </a>
+      </div>
+
+      <!-- Изображение паука -->
+      <div class="s1-spider-img" role="img" aria-label="Милый паук на сером фоне"></div>
+
+      <!-- Блок 4: Как уменьшить страх? -->
+      <div class="s1-section" style="margin-top:8px;">
+        <div class="s1-section-title">Как уменьшить<br>страх?</div>
+        <p class="s1-section-text">
+          Есть разные способы побороть фобию. От осознания, до постепенного привыкания и работы с мыслями.
+        </p>
+        <a class="s1-more-btn" href="#screen4-anchor">Подробнее </a>
+        <div class="s1-divider"></div>
+      </div>
+
+      <!-- Подвал -->
+      <div class="s1-footer">
+        <div class="s1-footer-logo">Spiders</div>
+        <div class="s1-footer-heading">Contact</div>
+        <div class="s1-footer-text">+7 999 888 77 67</div>
+        <div class="s1-footer-text">spiders333@gmail.com</div>
+
+        <!-- Декоративные волны -->
+        <div class="s1-footer-waves">
+          <div class="wave wave-1"></div>
+          <div class="wave wave-2"></div>
+          <div class="wave wave-3"></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /screen1 -->
+
+
+  <!-- ══════════════════════════════════════
+       ЭКРАН 2 — Проявления
+  ══════════════════════════════════════ -->
+  <div class="screen detail-screen" id="screen2-anchor">
+
+    <a class="detail-back" href="#screen1">Назад</a>
+
+    <div class="detail-title">Проявления</div>
+
+    <div class="detail-body">
+      <ol>
+        <li>Физические реакции</li>
+      </ol>
+      <p>
+        Как и другие фобии, она может сопровождаться разными симптомами: учащённое сердцебиение, тремор и иногда приступами паники. Также возможно навязчивое ощущение, будто пауки ползают по телу.
+      </p>
+
+      <div class="spacer"></div>
+
+      <ol start="2">
+        <li>Избегание определённых мест</li>
+      </ol>
+      <p>
+        Люди могут стараться не посещать места, где могут быть пауки, например гаражи, подвалы, леса, поля и тому подобное. Если же где-либо паук был замечен, зачастую человек начинает высматривать их везде.
+      </p>
+
+      <div class="spacer"></div>
+
+      <ol start="3">
+        <li>Навязчивые мысли</li>
+      </ol>
+      <p>
+        Помимо вышеперечисленного, фобия может проявляться в виде навязчивых мыслях о пауках даже тогда, когда по близости их нет. Такие мысли очень тяжело контролировать.
+      </p>
+    </div>
+
+  </div><!-- /screen2 -->
+
+
+  <!-- ══════════════════════════════════════
+       ЭКРАН 3 — Причины появления
+  ══════════════════════════════════════ -->
+  <div class="screen detail-screen" id="screen3-anchor">
+
+    <a class="detail-back" href="#screen1">Назад</a>
+
+    <div class="detail-title">Причины появления</div>
+
+    <div class="detail-body" style="top:234px;">
+      <ol>
+        <li>Негативный личный опыт</li>
+      </ol>
+      <p>
+        Фобия часто формируется после неприятного опыта, особенно если он произошел в детстве. К примеру, укус паука или внезапный контакт с ним.
+      </p>
+
+      <div class="spacer"></div>
+
+      <ol start="2">
+        <li>Влияние окружения</li>
+      </ol>
+      <p>
+        Если родители или близкие родственники остро реагируют на пауков, с большой вероятностью ребенок будет реагировать так же.
+      </p>
+
+      <div class="spacer"></div>
+
+      <ol start="3">
+        <li>Социальные установки</li>
+      </ol>
+      <p>
+        В фильмах, книгах и картинах зачастую пауки изображены огромными, страшными и опасными существами. Такие образы закрепляются в сознании человека и усиливают страх.
+      </p>
+    </div>
+
+  </div><!-- /screen3 -->
+
+
+  <!-- ══════════════════════════════════════
+       ЭКРАН 4 — Как уменьшить страх?
+  ══════════════════════════════════════ -->
+  <div class="screen detail-screen" id="screen4-anchor">
+
+    <a class="detail-back" href="#screen1">Назад</a>
+
+    <div class="detail-title">Как уменьшить<br>страх?</div>
+
+    <div class="detail-body" style="top:234px;">
+      <ol>
+        <li>Понять и осознать</li>
+      </ol>
+      <p>
+        Попробовать понять, что зачастую страх иррационален и необаснован, а большинство пауков вовсе не опасны и не принесут никакого вреда.
+      </p>
+
+      <div class="spacer"></div>
+
+      <ol start="2">
+        <li>Постепенное привыкание</li>
+      </ol>
+      <p>
+        Просматривать картинки и видео с пауками, наблюдать за ними на расстоянии.
+      </p>
+
+      <div class="spacer"></div>
+
+      <ol start="3">
+        <li>Работа с мыслями</li>
+      </ol>
+      <p>
+        Когда появляются такие мысли, как «Он обязательно меня укусит» или «Он прыгнет на меня», попробовать заменить их на более позитивные, например «Он не ядовитый» или «Он сам меня боится».
+      </p>
+    </div>
+
+  </div><!-- /screen4 -->
+
+
+  <!-- ══════════════════════════════════════
+       ЭКРАН 5 — Меню / Содержание
+  ══════════════════════════════════════ -->
+  <div class="screen" id="screen5">
+
+    <a class="menu-back" href="#screen1">Назад</a>
+
+    <!-- Пункт 1: Проявления -->
+    <a class="menu-link" style="top:149px;" href="#screen2-anchor">Проявления</a>
+    <div class="menu-divider" style="top:221px;"></div>
+
+    <!-- Пункт 2: Причины появления -->
+    <a class="menu-link" style="top:267px;" href="#screen3-anchor">Причины появления</a>
+    <div class="menu-divider" style="top:371px;"></div>
+
+    <!-- Пункт 3: Как уменьшить страх? -->
+    <a class="menu-link" style="top:416px;" href="#screen4-anchor">Как уменьшить страх?</a>
+    <div class="menu-divider" style="top:520px;"></div>
+
+    <!-- Декоративный элемент паука -->
+    <div class="menu-deco"></div>
+
+  </div><!-- /screen5 -->
+
+</body>
+</html>
